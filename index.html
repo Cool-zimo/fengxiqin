@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>冯希钦 · 生辰吉乐</title>
+<meta name="description" content="祝冯希钦生日快乐 —— 岁岁常欢愉，年年皆胜意。">
+<meta name="theme-color" content="#f2ead9">
+<link rel="icon" href="assets/favicon.svg">
+
+<!-- 社交分享卡片：转发到微信/QQ 时显示大图，而不是一个空白链接 -->
+<meta property="og:type"        content="website">
+<meta property="og:title"       content="冯希钦 · 生辰吉乐">
+<meta property="og:description" content="又逢佳辰，愿你笔下生花，事事胜意，前路坦荡，常有欢喜。">
+<meta property="og:image"       content="https://cool-zimo.github.io/fengxiqin/assets/bg-wide.jpg">
+<meta name="twitter:card"       content="summary_large_image">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 宣纸底：背景图 + 纤维噪点，两层叠加才有真纸的质感 -->
+<div id="bg" aria-hidden="true"></div>
+<div id="grain" aria-hidden="true"></div>
+
+<!-- 飘落的梅瓣 -->
+<div id="petals" aria-hidden="true"></div>
+
+<main>
+
+  <!-- ==================== 首屏 ==================== -->
+  <section id="cover">
+    <img class="orn orn-cloud-a" src="assets/cloud.png" alt="" aria-hidden="true">
+    <img class="orn orn-cloud-b" src="assets/cloud.png" alt="" aria-hidden="true">
+    <img class="orn orn-plum"    src="assets/plum.png"  alt="" aria-hidden="true">
+
+    <div class="cover-inner">
+      <!-- 竖排：中文传统从右往左读，所以名字在右、祝辞在左 -->
+      <h1 class="name" aria-label="冯希钦">
+        <span>冯</span><span>希</span><span>钦</span>
+      </h1>
+      <div class="sub" aria-label="生辰吉乐"><span>生</span><span>辰</span><span>吉</span><span>乐</span></div>
+    </div>
+
+    <p class="wish">
+      又逢佳辰，愿你<br>
+      笔下生花，事事胜意<br>
+      前路坦荡，常有欢喜
+    </p>
+
+    <!-- 印章：SVG 手绘。★ 为什么不用图片——汉字必须由浏览器排版，
+         生图写中文极易错字；且 SVG 能做边缘做旧，比位图更真。 -->
+    <svg class="seal" viewBox="0 0 120 120" role="img" aria-label="印章 冯希钦">
+      <defs>
+        <filter id="sealRough" x="-8%" y="-8%" width="116%" height="116%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" seed="7" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+      </defs>
+      <!-- 印框做旧：位移贴图让边框出现斑驳缺口，像真的盖歪了、墨不匀 -->
+      <g filter="url(#sealRough)">
+        <rect x="7" y="7" width="106" height="106" rx="7"
+              fill="none" stroke="#a8352a" stroke-width="8"/>
+      </g>
+      <!-- 印文不扭曲，保证字面清晰 -->
+      <g fill="#a8352a" font-family="Songti SC, STSong, SimSun, serif" font-size="30" text-anchor="middle">
+        <text x="60" y="42">冯</text>
+        <text x="60" y="72">希</text>
+        <text x="60" y="102">钦</text>
+      </g>
+    </svg>
+
+    <div class="hint" aria-hidden="true"><span>向</span><span>下</span></div>
+  </section>
+
+  <!-- ==================== 生日倒数 ==================== -->
+  <section id="count" hidden>
+    <div class="paper-card">
+      <div class="cd-num" id="cdNum">—</div>
+      <div class="cd-cap">日后 · 又是佳辰</div>
+    </div>
+  </section>
+
+  <!-- ==================== 吹蜡烛 ==================== -->
+  <section id="candle-sec">
+    <h2 class="sec-title">莲台一烛</h2>
+    <div class="candle-stage" id="candleStage" role="button" tabindex="0"
+         aria-label="吹熄蜡烛">
+      <img src="assets/candle-off.png" alt="青瓷莲台烛" id="candleImg">
+      <div class="flame-wrap" id="flame">
+        <div class="glow"></div>
+        <div class="flame"></div>
+        <div class="flame-core"></div>
+      </div>
+      <div class="smoke" id="smoke" aria-hidden="true"></div>
+    </div>
+    <p class="tip" id="candleTip">轻触烛火 · 或对屏幕吹一口气</p>
+    <button class="ghost-btn" id="relight" hidden>再点一次</button>
+  </section>
+
+  <!-- ==================== 拆锦盒 ==================== -->
+  <section id="gift-sec">
+    <h2 class="sec-title">锦盒一枚</h2>
+    <div class="gift-stage" id="giftStage" role="button" tabindex="0" aria-label="打开锦盒">
+      <img src="assets/gift.png" alt="锦盒" id="giftImg">
+      <div class="burst" id="burst" aria-hidden="true"></div>
+    </div>
+    <div class="scroll-wrap" id="scroll" aria-hidden="true">
+      <div class="scroll-inner">
+        <p class="scroll-text">
+          同窗一程，幸甚至哉。<br>
+          愿你此后每一年，<br>
+          都有今日这般的好光景。
+        </p>
+        <p class="scroll-sign">同学 谨贺</p>
+      </div>
+    </div>
+    <p class="tip" id="giftTip">轻启锦盒</p>
+  </section>
+
+  <!-- ==================== 祝福墙 ==================== -->
+  <section id="wall-sec">
+    <h2 class="sec-title">留笺</h2>
+    <form id="wform" autocomplete="off">
+      <input id="wname" type="text" placeholder="署名" maxlength="12" aria-label="署名">
+      <textarea id="wtext" rows="2" placeholder="写一句祝福" maxlength="80" aria-label="祝福内容"></textarea>
+      <button type="submit" class="ink-btn">贴上墙</button>
+    </form>
+    <div id="notes" class="notes"></div>
+    <p class="wall-note" id="wallEmpty">还没有人留笺 —— 你是第一个。</p>
+    <button class="ghost-btn" id="exportBtn" hidden>导出全部祝福</button>
+  </section>
+
+  <footer>
+    <div class="foot-seal" aria-hidden="true"></div>
+    <p>同学 谨贺 · 祝冯希钦 生日快乐</p>
+  </footer>
+
+</main>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<script src="js/main.js"></script>
+</body>
+</html>
