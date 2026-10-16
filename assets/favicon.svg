@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="8" fill="#f2ead9"/>
+  <rect x="10" y="10" width="44" height="44" rx="5" fill="none" stroke="#a8352a" stroke-width="4.5" opacity=".9"/>
+  <g fill="#a8352a" font-family="Songti SC, STSong, SimSun, serif" font-size="17" text-anchor="middle">
+    <text x="32" y="27">冯</text>
+    <text x="32" y="46">钦</text>
+  </g>
+</svg>
