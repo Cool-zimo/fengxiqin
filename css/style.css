@@ -1,0 +1,707 @@
+/* ============================================================
+   冯希钦 · 生辰吉乐   —— 国风雅致
+   配色取自宣纸、松烟墨、烫金、朱砂印泥、青瓷
+   ============================================================ */
+
+:root {
+  --paper:    #f2ead9;
+  --paper-2:  #faf4e8;
+  --ink:      #2e2a24;
+  --ink-2:    #5f574a;
+  --ink-3:    #8a8071;
+
+  --gold:     #c9a961;
+  --gold-d:   #96762c;
+  --gold-l:   #ecd9a8;
+  --cinnabar: #a8352a;
+  --celadon:  #8ba394;
+
+  --serif: "Songti SC", "STSong", "SimSun", "Noto Serif CJK SC",
+           "Source Han Serif SC", "Times New Roman", serif;
+
+  --ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* 底部安全区：iPhone 圆角和小黑条 */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ---------- 宣纸底：背景图 ---------- */
+#bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image: url("../assets/bg-tall.jpg");
+  background-size: cover;
+  background-position: center bottom;
+  opacity: .62;
+  pointer-events: none;
+}
+/* 横屏桌面换横版构图，不然竖图被裁得只剩中间一条 */
+@media (min-width: 900px) and (orientation: landscape) {
+  #bg { background-image: url("../assets/bg-wide.jpg"); opacity: .5; }
+}
+
+/* ---------- 宣纸纤维噪点 ----------
+   feTurbulence 生成的细密颗粒，压得很淡。
+   ★ 为什么不用纯色：宣纸的"纸感"全在这些不均匀里。 */
+#grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: .5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");
+}
+
+/* 四边压暗一点，像纸被压在案上 */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 45%,
+              rgba(0,0,0,0) 55%, rgba(60,48,30,.10) 100%);
+}
+
+main {
+  position: relative;
+  z-index: 3;
+}
+
+/* ============================================================
+   首屏
+   ============================================================ */
+#cover {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 22px 90px;
+  text-align: center;
+  /* ★ 装饰纹样是故意"出血"到画外的（见 .orn-plum 的 right:-2%），
+       不裁掉就会撑出横向滚动条 —— 手机上尤其明显。
+       裁掉的那一点正是"一枝梅花从纸外伸进来"的效果，本来就该切。 */
+  overflow: hidden;
+}
+
+/* --- 装饰纹样 --- */
+.orn {
+  position: absolute;
+  pointer-events: none;
+  opacity: .85;
+  user-select: none;
+}
+.orn-cloud-a {
+  top: 4%;  left: 3%;
+  width: clamp(78px, 21vw, 150px);
+  transform: rotate(-8deg);
+  opacity: .55;
+}
+.orn-cloud-b {
+  bottom: 8%; right: 2%;
+  width: clamp(66px, 18vw, 128px);
+  transform: rotate(172deg);
+  opacity: .45;
+}
+.orn-plum {
+  top: 2%; right: -2%;
+  width: clamp(120px, 34vw, 260px);
+  transform: rotate(6deg);
+  opacity: .8;
+}
+
+/* --- 名字与题辞 --- */
+.cover-inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(14px, 5vw, 42px);
+  /* 竖排从右往左：名字在右，所以 flex 反向 */
+  flex-direction: row-reverse;
+}
+
+/* 烫金渐变字。
+   ★ 关键：background-clip:text + color:transparent，
+     再用 background-size 200% 做流动的 shine。 */
+.gold-text {
+  background-image: linear-gradient(
+    175deg,
+    #f6e9c4 0%,
+    var(--gold-l) 22%,
+    var(--gold)  42%,
+    var(--gold-d) 56%,
+    #e2c98d 72%,
+    var(--gold)  100%
+  );
+  background-size: 100% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(120,86,20,.30))
+          drop-shadow(0 2px 10px rgba(180,140,60,.18));
+  animation: goldShine 7s ease-in-out infinite;
+}
+@keyframes goldShine {
+  0%, 100% { background-position: 50% 0%; }
+  50%      { background-position: 50% 100%; }
+}
+
+/* 名字：竖排三字 */
+.name {
+  margin: 0;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-size: clamp(52px, 15vw, 104px);
+  font-weight: 700;
+  letter-spacing: .10em;
+  line-height: 1.06;
+}
+.name span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-.34em);
+  animation: inkIn .95s var(--ease) forwards;
+}
+.name span:nth-child(1) { animation-delay: .28s; }
+.name span:nth-child(2) { animation-delay: .52s; }
+.name span:nth-child(3) { animation-delay: .76s; }
+
+@keyframes inkIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 题辞「生辰吉乐」 */
+.sub {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-size: clamp(17px, 4.6vw, 27px);
+  letter-spacing: .30em;
+  margin-top: clamp(6px, 2vw, 18px);
+  color: var(--ink-2);
+  opacity: 0;
+  animation: fadeUp 1.1s var(--ease) .95s forwards;
+}
+
+/* 祝辞正文 */
+.wish {
+  margin: clamp(30px, 7vw, 52px) 0 0;
+  font-size: clamp(14.5px, 4.1vw, 20px);
+  line-height: 2.15;
+  letter-spacing: .14em;
+  color: var(--ink-2);
+  opacity: 0;
+  animation: fadeUp 1.2s var(--ease) 1.25s forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 印章 --- */
+.seal {
+  position: absolute;
+  right: clamp(20px, 7vw, 64px);
+  bottom: clamp(96px, 20vw, 150px);
+  width: clamp(52px, 14vw, 76px);
+  height: clamp(52px, 14vw, 76px);
+  opacity: 0;
+  /* 盖印：从上方落下 + 轻微歪斜，最后一帧回正一点，像手按的 */
+  animation: stampIn .62s var(--ease) 1.9s forwards;
+}
+@keyframes stampIn {
+  0%   { opacity: 0; transform: scale(1.55) rotate(-9deg); }
+  70%  { opacity: .92; transform: scale(.97) rotate(2.5deg); }
+  100% { opacity: .88; transform: scale(1) rotate(1.6deg); }
+}
+
+/* --- 向下提示 --- */
+.hint {
+  position: absolute;
+  bottom: clamp(28px, 7vw, 46px);
+  left: 50%;
+  transform: translateX(-50%);
+  writing-mode: vertical-rl;
+  font-size: 12px;
+  letter-spacing: .34em;
+  color: var(--ink-3);
+  opacity: 0;
+  animation: fadeUp 1s var(--ease) 2.4s forwards;
+}
+.hint::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 26px;
+  margin: 8px auto 0;
+  background: linear-gradient(var(--ink-3), transparent);
+  animation: hintDrop 1.9s ease-in-out infinite;
+}
+@keyframes hintDrop {
+  0%, 100% { opacity: .3; transform: scaleY(.6); transform-origin: top; }
+  50%      { opacity: .9; transform: scaleY(1);  transform-origin: top; }
+}
+
+/* ============================================================
+   通用：区块标题、纸卡
+   ============================================================ */
+section:not(#cover) {
+  padding: clamp(52px, 12vw, 96px) 22px;
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.sec-title {
+  margin: 0 0 clamp(26px, 6vw, 44px);
+  font-size: clamp(15px, 4.2vw, 19px);
+  font-weight: 400;
+  letter-spacing: .48em;
+  text-indent: .48em;
+  color: var(--ink-2);
+}
+/* 标题两侧细金线，工笔框的感觉 */
+.sec-title::before,
+.sec-title::after {
+  content: "";
+  display: inline-block;
+  width: clamp(22px, 7vw, 46px);
+  height: 1px;
+  vertical-align: middle;
+  margin: 0 14px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+.sec-title::after { background: linear-gradient(90deg, var(--gold), transparent); }
+
+.tip {
+  margin: clamp(18px, 4vw, 26px) 0 0;
+  font-size: 13.5px;
+  letter-spacing: .18em;
+  color: var(--ink-3);
+}
+
+.paper-card {
+  display: inline-block;
+  min-width: clamp(200px, 62vw, 292px);
+  padding: clamp(28px, 7vw, 42px) clamp(24px, 6vw, 44px);
+  background: linear-gradient(160deg,
+              rgba(255,253,246,.90), rgba(246,238,222,.78));
+  border: 1px solid rgba(201,169,97,.42);
+  border-radius: 3px;
+  box-shadow: 0 12px 34px -18px rgba(90,68,30,.42),
+              inset 0 1px 0 rgba(255,255,255,.72);
+}
+
+/* ============================================================
+   倒数
+   ============================================================ */
+.cd-num {
+  font-size: clamp(50px, 15vw, 84px);
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.cd-cap {
+  margin-top: 14px;
+  font-size: clamp(12.5px, 3.6vw, 15px);
+  letter-spacing: .30em;
+  text-indent: .30em;
+  color: var(--ink-2);
+}
+
+/* ============================================================
+   蜡烛
+   ============================================================ */
+.candle-stage {
+  position: relative;
+  width: clamp(180px, 52vw, 250px);
+  margin: 0 auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.candle-stage img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: filter .5s ease;
+}
+.candle-stage:focus-visible { outline: 2px solid var(--gold); outline-offset: 6px; }
+
+/* 烛芯在整图的这个位置：顶部往下 24%，水平正中 */
+.flame-wrap {
+  position: absolute;
+  left: 50%;
+  top: 20.5%;
+  width: 0; height: 0;
+  transition: opacity .34s ease, transform .34s ease;
+}
+.flame-wrap.out {
+  opacity: 0;
+  transform: translateY(-14px) scale(.4);
+}
+
+.glow {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 120px; height: 120px;
+  margin: -60px 0 0 -60px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+              rgba(255,206,120,.50) 0%,
+              rgba(255,178,80,.22) 38%,
+              rgba(255,160,60,0) 72%);
+  animation: glowBreathe 2.3s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes glowBreathe {
+  0%, 100% { transform: scale(1);    opacity: .82; }
+  50%      { transform: scale(1.14); opacity: 1;   }
+}
+
+.flame {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 17px; height: 34px;
+  margin: -30px 0 0 -8.5px;
+  border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%;
+  background: radial-gradient(ellipse at 50% 76%,
+              #fffbe6 0%, #ffdf8e 26%,
+              #ffab3d 58%, rgba(255,124,32,.55) 78%,
+              rgba(255,110,30,0) 100%);
+  filter: blur(.5px);
+  animation: flicker .26s ease-in-out infinite alternate;
+  transform-origin: 50% 100%;
+  pointer-events: none;
+}
+/* 焰心：最亮那一点，单独一层才有层次 */
+.flame-core {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 7px; height: 15px;
+  margin: -19px 0 0 -3.5px;
+  border-radius: 50% 50% 44% 44% / 58% 58% 42% 42%;
+  background: radial-gradient(ellipse at 50% 72%,
+              #ffffff 0%, #fff8d8 45%, rgba(255,240,190,0) 100%);
+  animation: flickerCore .19s ease-in-out infinite alternate;
+  transform-origin: 50% 100%;
+  pointer-events: none;
+}
+@keyframes flicker {
+  0%   { transform: scale(1,1)      rotate(-1.6deg) skewX(0deg);   opacity: .93; }
+  100% { transform: scale(1.07,.93) rotate(1.8deg)  skewX(1.4deg); opacity: 1;   }
+}
+@keyframes flickerCore {
+  0%   { transform: scale(1,1)     translateX(-.4px); }
+  100% { transform: scale(1.1,.95) translateX(.5px);  }
+}
+
+/* 熄灭后的青烟 */
+.smoke {
+  position: absolute;
+  left: 50%; top: 20%;
+  width: 6px; height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.smoke.on {
+  background: rgba(140,132,118,.42);
+  animation: smokeUp 2.1s ease-out forwards;
+}
+@keyframes smokeUp {
+  0%   { opacity: 0;   transform: translateY(0)     scale(.6); }
+  18%  { opacity: .55; }
+  100% { opacity: 0;   transform: translateY(-76px) scale(3.4) translateX(9px); }
+}
+
+/* 熄灭后烛台略暗，符合"光没了" */
+.candle-stage.lit-out img { filter: brightness(.9) saturate(.86); }
+
+/* ============================================================
+   锦盒与卷轴
+   ============================================================ */
+.gift-stage {
+  position: relative;
+  width: clamp(160px, 46vw, 224px);
+  margin: 0 auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.gift-stage img {
+  display: block; width: 100%; height: auto;
+  transition: transform .5s var(--ease);
+}
+.gift-stage:focus-visible { outline: 2px solid var(--gold); outline-offset: 6px; }
+.gift-stage:hover img { transform: translateY(-3px); }
+.gift-stage.shake img { animation: boxShake .5s ease; }
+@keyframes boxShake {
+  0%,100% { transform: rotate(0)     translateY(0); }
+  25%     { transform: rotate(-2.6deg) translateY(-4px); }
+  75%     { transform: rotate(2.6deg)  translateY(-2px); }
+}
+.gift-stage.opened img { transform: scale(.94); opacity: .78; }
+
+/* 开盒瞬间迸出的金光 */
+.burst {
+  position: absolute;
+  left: 50%; top: 46%;
+  width: 10px; height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.burst.on {
+  background: radial-gradient(circle, rgba(255,240,190,.95), rgba(255,200,90,.5) 45%, rgba(255,180,60,0) 70%);
+  animation: burstOut .85s var(--ease) forwards;
+}
+@keyframes burstOut {
+  0%   { opacity: 0;  transform: scale(.3); }
+  35%  { opacity: 1;  transform: scale(9); }
+  100% { opacity: 0;  transform: scale(17); }
+}
+
+/* 卷轴：用 clip-path 从上往下"展开" */
+.scroll-wrap {
+  margin: clamp(22px, 5vw, 34px) auto 0;
+  max-width: 460px;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1.15s var(--ease);
+}
+.scroll-wrap.open { clip-path: inset(0 0 0 0); }
+
+.scroll-inner {
+  padding: clamp(26px, 6vw, 38px) clamp(20px, 5vw, 34px);
+  background: linear-gradient(170deg,
+              rgba(255,253,247,.95), rgba(247,240,225,.88));
+  border-left:  3px solid var(--gold-d);
+  border-right: 3px solid var(--gold-d);
+  border-radius: 2px;
+  box-shadow: 0 14px 38px -20px rgba(90,68,30,.5);
+}
+.scroll-text {
+  margin: 0;
+  font-size: clamp(15px, 4.2vw, 19px);
+  line-height: 2.25;
+  letter-spacing: .13em;
+  color: var(--ink);
+}
+.scroll-sign {
+  margin: 20px 0 0;
+  text-align: right;
+  font-size: 13px;
+  letter-spacing: .22em;
+  color: var(--ink-3);
+}
+
+/* ============================================================
+   祝福墙
+   ============================================================ */
+#wform {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+#wform input,
+#wform textarea {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--ink);
+  padding: 12px 14px;
+  background: rgba(255,253,246,.82);
+  border: 1px solid rgba(150,118,44,.34);
+  border-radius: 2px;
+  resize: none;
+  letter-spacing: .08em;
+}
+#wform input::placeholder,
+#wform textarea::placeholder { color: var(--ink-3); }
+#wform input:focus,
+#wform textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,169,97,.16);
+}
+
+.ink-btn {
+  align-self: center;
+  margin-top: 4px;
+  padding: 11px 34px;
+  font-family: var(--serif);
+  font-size: 15px;
+  letter-spacing: .26em;
+  text-indent: .26em;
+  color: var(--paper-2);
+  background: linear-gradient(160deg, #3b352c, var(--ink));
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px -12px rgba(46,42,36,.8);
+  transition: transform .22s var(--ease), box-shadow .22s ease;
+}
+.ink-btn:hover  { transform: translateY(-2px); box-shadow: 0 12px 24px -12px rgba(46,42,36,.85); }
+.ink-btn:active { transform: translateY(0); }
+
+.ghost-btn {
+  margin-top: 18px;
+  padding: 9px 24px;
+  font-family: var(--serif);
+  font-size: 13.5px;
+  letter-spacing: .2em;
+  text-indent: .2em;
+  color: var(--ink-2);
+  background: transparent;
+  border: 1px solid rgba(150,118,44,.44);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background .22s ease, color .22s ease;
+}
+.ghost-btn:hover { background: rgba(201,169,97,.14); color: var(--ink); }
+
+/* 便签：微微歪斜的宣纸小笺 */
+.notes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: clamp(26px, 6vw, 38px);
+}
+.note {
+  position: relative;
+  width: clamp(140px, 42vw, 186px);
+  padding: 16px 16px 14px;
+  text-align: left;
+  background: linear-gradient(168deg, #fffdf6, #f6efdd);
+  border: 1px solid rgba(201,169,97,.36);
+  border-radius: 2px;
+  box-shadow: 0 8px 20px -14px rgba(90,68,30,.55);
+  animation: noteIn .6s var(--ease) backwards;
+}
+@keyframes noteIn {
+  from { opacity: 0; transform: translateY(18px) rotate(0deg) scale(.94); }
+}
+.note .n-text {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.95;
+  letter-spacing: .07em;
+  color: var(--ink);
+  word-break: break-word;
+}
+.note .n-name {
+  margin: 12px 0 0;
+  text-align: right;
+  font-size: 12px;
+  letter-spacing: .16em;
+  color: var(--ink-3);
+}
+/* 左上角一枚极小朱点，像笺纸上的印 */
+.note::before {
+  content: "";
+  position: absolute;
+  top: 9px; left: 9px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--cinnabar);
+  opacity: .5;
+}
+
+.wall-note {
+  margin-top: 22px;
+  font-size: 13px;
+  letter-spacing: .16em;
+  color: var(--ink-3);
+}
+
+/* ============================================================
+   页脚
+   ============================================================ */
+footer {
+  padding: clamp(46px, 10vw, 78px) 22px clamp(46px, 12vw, 80px);
+  text-align: center;
+}
+.foot-seal {
+  width: 26px; height: 26px;
+  margin: 0 auto 18px;
+  border: 2px solid var(--cinnabar);
+  border-radius: 3px;
+  opacity: .34;
+}
+footer p {
+  margin: 0;
+  font-size: 12.5px;
+  letter-spacing: .24em;
+  color: var(--ink-3);
+}
+
+/* ============================================================
+   飘落梅瓣
+   ============================================================ */
+#petals {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.petal {
+  position: absolute;
+  top: -6vh;
+  width: 9px; height: 9px;
+  background: linear-gradient(135deg, var(--gold-l), var(--gold));
+  /* 这个圆角组合出来就是一枚花瓣 */
+  border-radius: 50% 0 50% 50%;
+  opacity: .62;
+  animation: petalFall linear infinite;
+}
+@keyframes petalFall {
+  0%   { transform: translateY(0)      rotate(0deg);   opacity: 0; }
+  8%   { opacity: .62; }
+  50%  { transform: translateY(52vh)   rotate(180deg) translateX(26px); }
+  92%  { opacity: .5; }
+  100% { transform: translateY(108vh)  rotate(380deg) translateX(-18px); opacity: 0; }
+}
+
+/* 烟花画布 */
+#fx {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+
+/* ============================================================
+   降低动效偏好：全部静止，但内容照常可读
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  .name span, .sub, .wish, .seal, .hint { opacity: 1; transform: none; }
+  #petals { display: none; }
+}
